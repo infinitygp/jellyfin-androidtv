@@ -32,6 +32,7 @@ android {
 
 	buildTypes {
 		release {
+			applicationIdSuffix = ".infinity"
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
 			// Set package names used in various XML files
