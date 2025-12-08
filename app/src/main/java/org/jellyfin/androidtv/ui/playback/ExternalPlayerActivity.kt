@@ -249,7 +249,7 @@ class ExternalPlayerActivity : FragmentActivity() {
 		// Fallback: Check for Vimu completion by result code only if action wasn't set.
 		// Some Vimu Player implementations may not set the result Intent's action field,
 		// so we check the result code directly as a fallback to ensure completion is detected.
-		if (endPosition == null && resultData == null && runtime != null && result.resultCode == API_VIMU_RESULT_PLAYBACK_COMPLETED) {
+		if (endPosition == null && resultData?.action != API_VIMU_RESULT_ID && runtime != null && result.resultCode == API_VIMU_RESULT_PLAYBACK_COMPLETED) {
 			endPosition = runtime
 			Timber.i("Detected playback completion for Vimu player (fallback check).")
 		}
