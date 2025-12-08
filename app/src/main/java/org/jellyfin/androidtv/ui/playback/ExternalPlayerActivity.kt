@@ -87,17 +87,8 @@ class ExternalPlayerActivity : FragmentActivity() {
 		val playerFinishedTime = Instant.now()
 		Timber.i("Playback finished with result code ${result.resultCode}")
 		videoQueueManager.setCurrentMediaPosition(videoQueueManager.getCurrentMediaPosition() + 1)
-
-		if (result.isVimuError) {
-			Toast.makeText(this, R.string.video_error_unknown_error, Toast.LENGTH_LONG).show()
-			finish()
-		} else {
-			onItemFinished(result, playerFinishedTime)
-		}
+		onItemFinished(result, playerFinishedTime)
 	}
-
-	private val ActivityResult.isVimuError get() =
-		data?.action == API_VIMU_RESULT_ID && resultCode == API_VIMU_RESULT_ERROR
 
 	private var currentItem: Pair<BaseItemDto, MediaSourceInfo>? = null
 
@@ -238,12 +229,27 @@ class ExternalPlayerActivity : FragmentActivity() {
 						Timber.i("Detected playback completion for VLC player.")
 					}
 				}
+				API_VIMU_RESULT_ID -> {
+					when (result.resultCode) {
+						API_VIMU_RESULT_PLAYBACK_COMPLETED -> {
+							endPosition = runtime
+							Timber.i("Detected playback completion for Vimu player.")
+						}
+						API_VIMU_RESULT_ERROR -> {
+							Timber.w("Vimu player reported an error")
+							Toast.makeText(this@ExternalPlayerActivity, R.string.video_error_unknown_error, Toast.LENGTH_LONG).show()
+							finish()
+							return
+						}
+					}
+				}
 			}
+		}
 
-			if (result.resultCode == API_VIMU_RESULT_PLAYBACK_COMPLETED) {
-				endPosition = runtime
-				Timber.i("Detected playback completion for Vimu player.")
-			}
+		// Fallback: Check for Vimu completion by result code only if action wasn't set
+		if (endPosition == null && resultData == null && runtime != null && result.resultCode == API_VIMU_RESULT_PLAYBACK_COMPLETED) {
+			endPosition = runtime
+			Timber.i("Detected playback completion for Vimu player (fallback check).")
 		}
 
 		val shouldPlayNext = runtime != null && endPosition != null && endPosition >= (runtime * 0.9)
