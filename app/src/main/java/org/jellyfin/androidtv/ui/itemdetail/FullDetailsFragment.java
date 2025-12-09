@@ -755,6 +755,7 @@ public class FullDetailsFragment extends Fragment implements RecordingIndicatorV
     TextUnderButton deleteButton = null;
     TextUnderButton moreButton;
     TextUnderButton playButton = null;
+    TextUnderButton duneHdButton = null;
     TextUnderButton trailerButton = null;
 
     private void addButtons(int buttonSize) {
@@ -788,6 +789,17 @@ public class FullDetailsFragment extends Fragment implements RecordingIndicatorV
                 }
             });
             mDetailsOverviewRow.addAction(playButton);
+
+            // Add "Play in Dune HD" button for video content (movies, episodes, videos)
+            if (baseItem.getType() == BaseItemKind.MOVIE || baseItem.getType() == BaseItemKind.EPISODE || baseItem.getType() == BaseItemKind.VIDEO) {
+                duneHdButton = TextUnderButton.create(requireContext(), R.drawable.ic_tv_play, buttonSize, 2, getString(R.string.lbl_play_in_dune_hd), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FullDetailsFragmentHelperKt.playInDuneHd(FullDetailsFragment.this);
+                    }
+                });
+                mDetailsOverviewRow.addAction(duneHdButton);
+            }
 
             if (isSeries && !isStarted) {
                 FullDetailsFragmentHelperKt.getNextUpEpisode(this, nextUpEpisode -> {

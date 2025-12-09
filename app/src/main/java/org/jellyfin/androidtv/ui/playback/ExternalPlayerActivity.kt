@@ -45,6 +45,7 @@ import kotlin.time.Duration.Companion.seconds
 class ExternalPlayerActivity : FragmentActivity() {
 	companion object {
 		const val EXTRA_POSITION = "position"
+		const val EXTRA_TARGET_PACKAGE = "target_package"
 
 		// https://mx.j2inter.com/api
 		private const val API_MX_TITLE = "title"
@@ -100,10 +101,12 @@ class ExternalPlayerActivity : FragmentActivity() {
 		data?.action == API_VIMU_RESULT_ID && resultCode == API_VIMU_RESULT_ERROR
 
 	private var currentItem: Pair<BaseItemDto, MediaSourceInfo>? = null
+	private var targetPackage: String? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
+		targetPackage = intent.getStringExtra(EXTRA_TARGET_PACKAGE)
 		val position = intent.getLongExtra(EXTRA_POSITION, 0).milliseconds
 		playNext(position)
 	}
@@ -164,6 +167,9 @@ class ExternalPlayerActivity : FragmentActivity() {
 			}
 
 			setDataAndTypeAndNormalize(url.toUri(), mediaType)
+
+			// Set specific package if targeting a specific player
+			targetPackage?.let { setPackage(it) }
 
 			putExtra(API_MX_SEEK_POSITION, position.inWholeMilliseconds.toInt())
 			putExtra(API_MX_RETURN_RESULT, true)
