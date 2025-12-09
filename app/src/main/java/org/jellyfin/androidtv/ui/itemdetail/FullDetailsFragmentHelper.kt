@@ -405,7 +405,7 @@ const val DUNE_HD_PACKAGE = "com.dunehd.app"
 fun FullDetailsFragment.playInDuneHd() {
 	val item = mBaseItem ?: return
 	playbackHelper.value.getItemsToPlay(
-		context,
+		requireContext(),
 		item,
 		item.type == BaseItemKind.MOVIE,
 		false,
