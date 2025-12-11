@@ -168,7 +168,6 @@ class ExternalPlayerActivity : FragmentActivity() {
 
 			setDataAndTypeAndNormalize(url.toUri(), mediaType)
 
-			// Set specific package if targeting a specific player
 			targetPackage?.let { setPackage(it) }
 
 			putExtra(API_MX_SEEK_POSITION, position.inWholeMilliseconds.toInt())
