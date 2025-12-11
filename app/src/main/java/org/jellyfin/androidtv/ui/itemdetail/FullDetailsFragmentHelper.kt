@@ -14,6 +14,7 @@ import org.jellyfin.androidtv.data.repository.ItemMutationRepository
 import org.jellyfin.androidtv.data.repository.ItemRepository
 import org.jellyfin.androidtv.ui.navigation.Destinations
 import org.jellyfin.androidtv.ui.navigation.NavigationRepository
+import org.jellyfin.androidtv.ui.playback.VideoQueueManager
 import org.jellyfin.androidtv.util.TimeUtils
 import org.jellyfin.androidtv.util.apiclient.getSeriesOverview
 import org.jellyfin.androidtv.util.popupMenu
@@ -397,4 +398,37 @@ fun FullDetailsFragment.getLiveTvChannel(
 			callback(channel)
 		}
 	}
+}
+
+const val DUNE_HD_PACKAGE = "com.dunehd.app"
+
+fun FullDetailsFragment.playInDuneHd() {
+	val item = mBaseItem ?: return
+	playbackHelper.value.getItemsToPlay(
+		requireContext(),
+		item,
+		item.type == BaseItemKind.MOVIE,
+		false,
+		object : org.jellyfin.androidtv.util.apiclient.Response<List<BaseItemDto>>(lifecycle) {
+			override fun onResponse(response: List<BaseItemDto>) {
+				if (!isActive) return
+				if (response.isEmpty()) {
+					Timber.w("No items to play - ignoring Dune HD play request.")
+					return
+				}
+
+				val videoQueueManager: VideoQueueManager by inject()
+				videoQueueManager.setCurrentVideoQueue(response)
+				videoQueueManager.setCurrentMediaPosition(0)
+
+				requireContext().startActivity(
+					org.jellyfin.androidtv.ui.navigation.ActivityDestinations.externalPlayer(
+						requireContext(),
+						Duration.ZERO,
+						DUNE_HD_PACKAGE
+					)
+				)
+			}
+		}
+	)
 }

@@ -48,10 +48,11 @@ object ActivityDestinations {
 	fun liveTvGuideFilterPreferences(context: Context) = preferenceIntent<GuideFiltersScreen>(context)
 	fun liveTvGuideOptionPreferences(context: Context) = preferenceIntent<GuideOptionsScreen>(context)
 
-	fun externalPlayer(context: Context, position: Duration = Duration.ZERO) = Intent(context, ExternalPlayerActivity::class.java).apply {
+	fun externalPlayer(context: Context, position: Duration = Duration.ZERO, targetPackage: String? = null) = Intent(context, ExternalPlayerActivity::class.java).apply {
 		putExtras(
 			bundleOf(
-				ExternalPlayerActivity.EXTRA_POSITION to position.inWholeMilliseconds
+				ExternalPlayerActivity.EXTRA_POSITION to position.inWholeMilliseconds,
+				ExternalPlayerActivity.EXTRA_TARGET_PACKAGE to targetPackage
 			)
 		)
 	}
