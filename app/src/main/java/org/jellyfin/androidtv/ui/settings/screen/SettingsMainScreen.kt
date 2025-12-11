@@ -1,6 +1,5 @@
 package org.jellyfin.androidtv.ui.settings.screen
 
-import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import org.jellyfin.androidtv.BuildConfig
 import org.jellyfin.androidtv.R
 import org.jellyfin.androidtv.ui.base.Icon
 import org.jellyfin.androidtv.ui.base.Text
@@ -49,9 +47,7 @@ fun SettingsMainScreen() {
 			},
 			headingContent = { Text(stringResource(R.string.pref_login)) },
 			captionContent = { Text(stringResource(R.string.pref_login_description)) },
-			onClick = {
-				context.startActivity(ActivityDestinations.authPreferences(context))
-			}
+			onClick = { router.push(Routes.AUTHENTICATION) }
 		)
 
 		ListButton(
@@ -91,9 +87,7 @@ fun SettingsMainScreen() {
 			},
 			headingContent = { Text(stringResource(R.string.pref_telemetry_category)) },
 			captionContent = { Text(stringResource(R.string.pref_telemetry_description)) },
-			onClick = {
-				router.push(Routes.TELEMETRY)
-			}
+			onClick = { router.push(Routes.TELEMETRY) }
 		)
 
 		ListButton(
@@ -105,50 +99,9 @@ fun SettingsMainScreen() {
 			},
 			headingContent = { Text(stringResource(R.string.pref_developer_link)) },
 			captionContent = { Text(stringResource(R.string.pref_developer_link_description)) },
-			onClick = {
-				context.startActivity(ActivityDestinations.developerPreferences(context))
-			}
+			onClick = { router.push(Routes.DEVELOPER) }
 		)
 
-		ListSection(
-			modifier = Modifier,
-			headingContent = { Text(stringResource(R.string.pref_about_title)) },
-		)
-
-		ListSection(
-			leadingContent = {
-				Icon(
-					painterResource(R.drawable.ic_jellyfin),
-					contentDescription = null
-				)
-			},
-			headingContent = { Text("Jellyfin app version") },
-			captionContent = { Text("jellyfin-androidtv ${BuildConfig.VERSION_NAME} ${BuildConfig.BUILD_TYPE}") },
-		)
-
-		ListSection(
-			leadingContent = {
-				Icon(
-					painterResource(R.drawable.ic_tv),
-					contentDescription = null
-				)
-			},
-			headingContent = { Text(stringResource(R.string.pref_device_model)) },
-			captionContent = { Text("${Build.MANUFACTURER} ${Build.MODEL}") },
-		)
-
-		ListButton(
-			leadingContent = {
-				Icon(
-					painterResource(R.drawable.ic_guide),
-					contentDescription = null
-				)
-			},
-			headingContent = { Text(stringResource(R.string.licenses_link)) },
-			captionContent = { Text(stringResource(R.string.licenses_link_description)) },
-			onClick = {
-				context.startActivity(ActivityDestinations.licenses(context))
-			}
-		)
+		SettingsMainScreenAbout()
 	}
 }
