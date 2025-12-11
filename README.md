@@ -44,7 +44,16 @@
 
 Jellyfin Android TV is a Jellyfin client for Android TV, Nvidia Shield, and Amazon Fire TV devices.
 We welcome all contributions and pull requests! If you have a larger feature in mind please open an
-issue so we can discuss the implementation before you start. 
+issue so we can discuss the implementation before you start.
+
+## Why fork?
+To adjust the app to my personal needs.
+
+List of changes:
+- Modified external player handling so it behaves as before. In the official version, exiting the Dune HD player currently results in a "Failed to load video" message.
+- Added a "Play in Dune HD" button. I prefer to use the Dune HD player for movies to achieve the best quality, but it lacks the ability to return playback data to the Jellyfin app. Because of that, I use another external player with better compatibility for TV shows and anime.
+
+The builds use a different application ID, so they can be installed alongside the official version.
 
 ## Translating
 
@@ -76,7 +85,7 @@ Look through the following graphic to see if your native language could use some
    ```sh
    ./gradlew assembleDebug
    ```
-   
+
    Add the Android SDK to your PATH environment variable or create the ANDROID_SDK_ROOT variable for
    this to work.
 
